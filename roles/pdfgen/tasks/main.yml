@@ -1,0 +1,85 @@
+---
+# tasks file for pdfgen
+
+######################################
+### packages
+
+- name: "Pdfgen: Manage dependencies"
+  become: true
+  ansible.builtin.package:
+    name: "{{ pdfgen_package }}"
+    state: "{{ pdfgen_package_state }}"
+
+- name: "Pdfgen: Manage python dependencies"
+  become: true
+  ansible.builtin.pip:
+    name: "{{ pdfgen_pip_package }}"
+    state: "{{ pdfgen_pip_package_state }}"
+
+######################################
+### jobs
+
+- name: "Pdfgen: Enable lingering"
+  become: true
+  ansible.builtin.command: loginctl enable-linger {{ pdfgen_user }}
+  register: lingering
+  changed_when: lingering.rc != 0
+
+- name: "Pdfgen: Ensure folder exists"
+  become: true
+  ansible.builtin.file:
+    path: "{{ pdfgen_document_path }}"
+    state: directory
+    owner: "{{ pdfgen_user }}"
+    group: "{{ pdfgen_user }}"
+    recurse: true
+    mode: "0755"
+
+- name: "Pdfgen: Create user systemd directory"
+  become: true
+  ansible.builtin.file:
+    path: /home/{{ pdfgen_user }}/.config/systemd/user
+    state: directory
+    owner: "{{ pdfgen_user }}"
+    group: "{{ pdfgen_user }}"
+    recurse: true
+    mode: "0755"
+
+- name: "Pdfgen: Copy systemd service"
+  become: true
+  ansible.builtin.template:
+    src: pdfgen.service.j2
+    dest: /home/{{ pdfgen_user }}/.config/systemd/user/{{ pdfgen_service_name }}
+    owner: "{{ pdfgen_user }}"
+    group: "{{ pdfgen_user }}"
+    mode: "0744"
+
+- name: "Pdfgen: Copy python script"
+  become: true
+  ansible.builtin.copy:
+    src: pdfgen.py
+    dest: /opt/pdfgen.py
+    owner: root
+    group: root
+    mode: "0755"
+
+######################################
+### services
+
+- name: "Pdfgen: Systemd reread configs"
+  become_user: "{{ pdfgen_user }}"
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+    scope: user
+
+- name: "Pdfgen: Manage services"
+  become_user: "{{ pdfgen_user }}"
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ pdfgen_service_name }}"
+    state: "{{ pdfgen_service_state }}"
+    enabled: "{{ pdfgen_service_enabled }}"
+    scope: user
+  when:
+    - pdfgen_package != 'absent'

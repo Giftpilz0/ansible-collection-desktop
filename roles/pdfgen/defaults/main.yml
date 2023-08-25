@@ -1,0 +1,18 @@
+---
+# defaults file for pdfgen
+
+pdfgen_document_path: /home/{{ ansible_user }}/Documents/
+pdfgen_user: "{{ ansible_user }}"
+
+pdfgen_service_name: pdfgen.service
+pdfgen_service_state: started
+pdfgen_service_enabled: true
+pdfgen_package_state: present
+pdfgen_package:
+  - python3
+  - python3-pip
+  - libreoffice-core
+
+pdfgen_pip_package_state: present
+pdfgen_pip_package:
+  - watchdog

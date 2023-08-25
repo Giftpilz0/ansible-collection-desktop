@@ -1,0 +1,11 @@
+[Unit]
+Description=Python-Script to generate pdf
+
+[Service]
+Type=simple
+Restart=always
+RemainAfterExit=yes
+ExecStart=/usr/bin/python3 /opt/pdfgen.py "{{ pdfgen_document_path }}"
+
+[Install]
+WantedBy=default.target

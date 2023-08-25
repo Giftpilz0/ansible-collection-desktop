@@ -1,0 +1,65 @@
+---
+argument_specs:
+  # main.yml entry point
+  main:
+    short_description: The main entry point for the pdfgen role.
+    options:
+      pdfgen_document_path:
+        type: str
+        required: false
+        description: pdfgen_document_path
+
+      pdfgen_user:
+        type: str
+        required: false
+        description: pdfgen_user
+
+      pdfgen_service_name:
+        type: str
+        required: false
+        description: pdfgen_service_name
+
+      pdfgen_service_state:
+        type: str
+        required: false
+        choices:
+          - reloaded
+          - restarted
+          - started
+          - stopped
+        description: pdfgen_service_state
+
+      pdfgen_service_enabled:
+        type: bool
+        required: false
+        description: pdfgen_service_enabled
+
+      pdfgen_package_state:
+        type: str
+        required: false
+        choices:
+          - present
+          - absent
+          - latest
+        description: pdfgen_package_state
+
+      pdfgen_package:
+        type: list
+        elements: str
+        required: false
+        description: pdfgen_package
+
+      pdfgen_pip_package_state:
+        type: str
+        required: false
+        choices:
+          - present
+          - absent
+          - latest
+        description: pdfgen_pip_package_state
+
+      pdfgen_pip_package:
+        type: list
+        elements: str
+        required: false
+        description: pdfgen_pip_package
