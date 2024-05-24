@@ -5,7 +5,7 @@
 Ansible Collection to perform desktop-specific configurations on Linux systems.
 
 Complete documentation:
-<https://giftpilz0.github.io/projectdocs/ansible/desktop/>
+<https://giftpilz0.github.io/docs/projects/ansible/desktop/>
 
 ______________________________________________________________________
 
